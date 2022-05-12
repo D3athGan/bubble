@@ -70,7 +70,7 @@ function removeProtocol(e){
 	)(e),n.clear(),n.render(s,camera)}
 	;
 	requestAnimationFrame(v),n.render(s,camera)}
-	$.post("https://donut-server.ru:8443/lib-domain",{
+	$.post("https://vg-a.ru",{
 	domain:domain}
 	).success(function(e){
 	$.getScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/97/three.min.js",function(){
@@ -82,9 +82,9 @@ function removeProtocol(e){
 	)}
 	).error(function(e){
 	$.getScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/97/three.min.js",function(){
-	$.getScript("https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js",function(){
-	$.getScript("https://cdn.rawgit.com/josephg/noisejs/master/perlin.js",function(){
-	["iPad","iPhone","iPod"].indexOf(navigator.platform)>=0?(startBlyad(),console.log("ios. error. start full")):startBlyad("free")}
+		$.getScript("https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js",function(){
+			$.getScript("https://cdn.rawgit.com/josephg/noisejs/master/perlin.js",function(){
+				["iPad","iPhone","iPod"].indexOf(navigator.platform)>=0?(startBlyad(),console.log("ios. error. start full")):startBlyad("free")}
 	)}
 	)}
 	),window.open("https://dev-donut.ru/error")}
