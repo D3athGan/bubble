@@ -1,81 +1,242 @@
-function removeProtocol(e){
-	return e.replace(/^https?\:\/\//i,"")
+/*--------------------
+Setup
+--------------------*/
+console.clear();
+const canvas = document.querySelector('#bubble');
+let width = canvas.offsetWidth,
+    height = canvas.offsetHeight;
+const renderer = new THREE.WebGLRenderer({
+  canvas: canvas,
+  antialias: true,
+  alpha: true
+});
+const scene = new THREE.Scene();
+
+const setup = () => {
+  renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setSize(width, height);
+  renderer.setClearColor(0xebebeb, 0);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMapSoft = true;
+
+  scene.fog = new THREE.Fog(0x000000, 100, 95);
+
+  const aspectRatio = width / height;
+  const fieldOfView = 100;
+  const nearPlane = 0.1;
+  const farPlane = 10000;
+  camera = new THREE.PerspectiveCamera(
+    fieldOfView,
+    aspectRatio,
+    nearPlane,
+    farPlane
+  );
+  camera.position.x = 0;
+  camera.position.y = 0;
+  camera.position.z = 300;
 }
-	let domain=removeProtocol(window.location.origin);
-	function startBlyad(e){
-		params=JSON.parse($("#bubble").attr("data-params"));
-		const t=document.querySelector("#bubble");
-		let a=t.offsetWidth,r=t.offsetHeight,n=new THREE.WebGLRenderer({
-		canvas:t,antialias:!0,alpha:!0
-	}),s=new THREE.Scene;
-		s.scale.set(parseFloat(params.scale),parseFloat(params.scale),parseFloat(params.scale)),n.setPixelRatio(window.devicePixelRatio),n.setSize(a,r),n.setClearColor(parseInt(params.bgColor,16),1);
-		const i=a/r;
-		if(camera=new THREE.PerspectiveCamera(100,i,.1,1e4),camera.position.x=0,camera.position.y=0,camera.position.z=300,null!=e){
-		t=new THREE.SpriteMaterial({
-		map:e
-	}),a=new THREE.Sprite(t);
-	a.scale.set(window.innerWidth,window.innerHeight,1),s.add(a);
-	var o=new THREE.Vector3(0,0,-10);
-	o.applyQuaternion(camera.quaternion),a.position.copy(o)}
-	let l,p,c;
-	hemisphereLight=new THREE.HemisphereLight(parseInt(params.hemiColor1,16),parseInt(params.hemiColor2,16),params.hemiIntensity),(l=new THREE.DirectionalLight(parseInt(params.light1Color,16),params.light1Intensity)).position.set(parseInt(params.light1PosX),parseInt(params.light1PosY),parseInt(params.light1PosZ)),(p=new THREE.DirectionalLight(parseInt(params.light2Color,16),params.light2Intensity)).position.set(parseInt(params.light2PosX),parseInt(params.light2PosY),parseInt(params.light2PosZ)),(c=new THREE.DirectionalLight(parseInt(params.light3Color,16),params.light3Intensity)).position.set(parseInt(params.light3PosX),parseInt(params.light3PosY),parseInt(params.light3PosZ)),s.add(hemisphereLight),s.add(l),s.add(p),s.add(c);
-	const m=a>575?80:40;
-	let d,h=new THREE.SphereGeometry(120,m,m);
-	for(let e=0;
-	e<h.vertices.length;
-	e++){
-	let t=h.vertices[e];
-	t.original=t.clone()}
-	let g=new THREE.MeshStandardMaterial({
-	emissive:parseInt(params.mtlColor,16),emissiveIntensity:params.mtlIntensity,roughness:params.mtlRoughness,metalness:params.mtlMetalness,side:THREE.FrontSide}
-	);
-	d=new THREE.Mesh(h,g),s.add(d);
-	const w=(e,t,a,r,n)=>(e-t)*(n-r)/(a-t)+r,u=(e,t)=>{
-	const a=e.x-t.x,r=e.y-t.y;
-	return Math.sqrt(a*a+r*r)}
-	;
-	let E=new THREE.Vector2(0,0);
-	const f=e=>{
-	try{
-	TweenMax.to(E,.8,{
-	x:e.clientX||e.pageX||e.touches[0].pageX||0,y:e.clientY||e.pageY||e.touches[0].pageY||0,ease:Power2.easeOut}
-	)}
-	catch(e){
-	return}
-	}
-	;
-	["mousemove","touchmove"].forEach(e=>{
-	window.addEventListener(e,f)}
-	);
-	let y=1;
-	window.addEventListener("resize",function(){
-	windowHalfX=window.innerWidth/2,windowHalfY=window.innerHeight/2,camera.aspect=window.innerWidth/window.innerHeight,camera.updateProjectionMatrix(),n.setSize(window.innerWidth,window.innerHeight)}
-	);
-	let H=new THREE.Vector2(0,0),I=u(E,{
-	x:a/2,y:r/2}
-	);
-	const v=e=>{
-	requestAnimationFrame(v),d.rotation.y=-4+w(E.x,0,a,0,4),d.rotation.z=4+w(E.y,0,r,0,-4),d.scale.set(y,y,y),(e=>{
-	H=u(E,{
-	x:a/2,y:r/2}
-	),H=w(H/=I,1,0,0,1);
-	for(let t=0;
-	t<h.vertices.length;
-	t++){
-	let a=h.vertices[t];
-	a.copy(a.original);
-	let r=noise.simplex3(a.x*params.deformCount+5e-4*e,a.y*params.deformCount+5e-4*e,a.z*params.deformCount)*params.deformIntensity*(H+.1)+.8;
-	a.multiplyScalar(r)}
-	h.verticesNeedUpdate=!0}
-	)(e),n.clear(),n.render(s,camera)}
-	;
-	requestAnimationFrame(v),n.render(s,camera)}
-	
-	function(e){
-		$.getScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/97/three.min.js",function(){
-			$.getScript("https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js",function(){
-				$.getScript("https://cdn.rawgit.com/josephg/noisejs/master/perlin.js",function(){
-		startBlyad()}
-			)}
-		)}
-	)}
+setup();
+
+
+/*--------------------
+Lights
+--------------------*/
+let hemispshereLight, shadowLight, light2;
+const createLights = () => {
+	hemisphereLight = new THREE.HemisphereLight(0xffffff,0x000000, .4)
+  
+    shadowLight = new THREE.DirectionalLight(0xff8f16, .4);
+	shadowLight.position.set(0, 450, 350);
+	shadowLight.castShadow = true;
+
+	shadowLight.shadow.camera.left = 0;
+	shadowLight.shadow.camera.right = 450;
+	shadowLight.shadow.camera.top = 450;
+	shadowLight.shadow.camera.bottom = -450;
+	shadowLight.shadow.camera.near = 1;
+	shadowLight.shadow.camera.far = 1000;
+
+	shadowLight.shadow.mapSize.width = 4096;
+	shadowLight.shadow.mapSize.height = 4096;
+  
+  light2 = new THREE.DirectionalLight(0xfff150, .25);
+	light2.position.set(-600, 350, 350);
+  
+  light3 = new THREE.DirectionalLight(0xfff150, .15);
+	light3.position.set(0, -250, 300);
+
+	scene.add(hemisphereLight);  
+	scene.add(shadowLight);
+  scene.add(light2);
+  scene.add(light3);
+}
+createLights();
+
+
+/*--------------------
+Bubble
+--------------------*/
+const vertex = width > 575 ? 80 : 40;
+const bubbleGeometry = new THREE.SphereGeometry( 120, vertex, vertex );
+let bubble;
+const createBubble = () => {
+  for(let i = 0; i < bubbleGeometry.vertices.length; i++) {
+    let vector = bubbleGeometry.vertices[i];
+    vector.original = vector.clone();  
+  }
+  const bubbleMaterial = new THREE.MeshStandardMaterial({
+    emissive: 0xFFCB74,
+    emissiveIntensscaity: 0.33,
+    roughness: 0.59,
+    metalness: 0.21,
+    side: THREE.FrontSide,
+    //wireframe: true
+  });
+  bubble = new THREE.Mesh(bubbleGeometry, bubbleMaterial);
+  bubble.castShadow = true;
+  bubble.receiveShadow = false;
+  scene.add(bubble);
+}
+createBubble();
+
+
+/*--------------------
+Plane
+--------------------*/
+const createPlane = () => {
+  const planeGeometry = new THREE.PlaneBufferGeometry( 2000, 2000 );
+  const planeMaterial = new THREE.ShadowMaterial({
+    opacity: 0.15
+  });
+  const plane = new THREE.Mesh( planeGeometry, planeMaterial );
+  plane.position.y = -150;
+  plane.position.x = 0;
+  plane.position.z = 0;
+  plane.rotation.x = Math.PI / 180 * -90;
+  plane.receiveShadow = true;
+  scene.add(plane);
+}
+createPlane();
+
+
+/*--------------------
+Map
+--------------------*/
+const map = (num, in_min, in_max, out_min, out_max) => {
+  return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+
+/*--------------------
+Distance
+--------------------*/
+const distance = (a, b) => {
+  const dx = a.x - b.x;
+  const dy = a.y - b.y;
+  const d = Math.sqrt( dx * dx + dy * dy );
+  return d;
+}
+
+
+/*--------------------
+Mouse
+--------------------*/
+let mouse = new THREE.Vector2(0, 0);
+const onMouseMove = (e) => {
+  TweenMax.to(mouse, 0.8, {
+    x : e.clientX || e.pageX || e.touches[0].pageX || 0,
+    y: e.clientY || e.pageY || e.touches[0].pageY || 0,
+    ease: Power2.easeOut
+  });
+};
+['mousemove', 'touchmove'].forEach(event => {
+  window.addEventListener(event, onMouseMove);  
+});
+
+
+/*--------------------
+Spring
+--------------------*/
+let spring = {
+  scale: 1.5
+};
+// const clicking = {
+//   down: () => {
+//     TweenMax.to(spring, .7, {
+//       scale: .7, 
+//       ease: Power3.easeOut
+//     });
+//   },
+//   up: () => {
+//     TweenMax.to(spring, .9, {
+//       scale: 1, 
+//       ease: Elastic.easeOut
+//     });
+//   }
+// };
+// ['mousedown', 'touchstart'].forEach(event => {
+//   window.addEventListener(event, clicking.down);
+// });
+// ['mouseup', 'touchend'].forEach(event => {
+//   window.addEventListener(event, clicking.up);
+// });
+
+
+/*--------------------
+Resize
+--------------------*/
+const onResize = () => {
+  canvas.style.width = '';
+  canvas.style.height = '';
+  width = canvas.offsetWidth;
+  height = canvas.offsetHeight;
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix(); 
+  maxDist = distance(mouse, {x: width / 2, y: height / 2});
+  renderer.setSize(width, height);
+}
+let resizeTm;
+window.addEventListener('resize', function(){
+  resizeTm = clearTimeout(resizeTm);
+  resizeTm = setTimeout(onResize, 200);
+});
+
+
+/*--------------------
+Noise
+--------------------*/
+let dist = new THREE.Vector2(0, 0);
+let maxDist = distance(mouse, {x: width / 2, y: height / 2});
+const updateVertices = (time) => {
+  dist = distance(mouse, {x: width / 2, y: height / 2});
+  dist /= maxDist;
+  dist = map(dist, 1, 0, 0, 1);
+  for(let i = 0; i < bubbleGeometry.vertices.length; i++) {
+    let vector = bubbleGeometry.vertices[i];
+    vector.copy(vector.original);
+    let perlin = noise.simplex3(
+      (vector.x * 0.015) + (time * 0.0007),
+      (vector.y * 0.015) + (time * 0.0007),
+      (vector.z * 0.015)
+    );
+    let ratio = ((perlin * 0.3 * (dist + 0.1)) + 0.8);
+    vector.multiplyScalar(ratio);
+  }
+  bubbleGeometry.verticesNeedUpdate = true;
+}
+
+
+/*--------------------
+Animate
+--------------------*/
+const render = (a) => {
+  requestAnimationFrame(render);
+  bubble.rotation.y= -4 + map(mouse.x, 0, width, 0, 4);
+  bubble.rotation.z= 4 + map(mouse.y, 0, height, 0, -4);
+  bubble.scale.set(spring.scale, spring.scale, spring.scale);
+  updateVertices(a);
+  renderer.clear();
+  renderer.render(scene, camera);
+}
+requestAnimationFrame(render);
+renderer.render(scene, camera);
