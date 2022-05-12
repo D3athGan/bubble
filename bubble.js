@@ -71,21 +71,14 @@ function removeProtocol(e){
 	;
 	requestAnimationFrame(v),n.render(s,camera)}
 	$.post("https://vg-a.ru",{
-	domain:domain}
+		domain:domain
+	}
 	).success(function(e){
-	$.getScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/97/three.min.js",function(){
-	$.getScript("https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js",function(){
-	$.getScript("https://cdn.rawgit.com/josephg/noisejs/master/perlin.js",function(){
-	startBlyad()}
-	)}
-	)}
-	)}
-	).error(function(e){
 	$.getScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/97/three.min.js",function(){
 		$.getScript("https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js",function(){
 			$.getScript("https://cdn.rawgit.com/josephg/noisejs/master/perlin.js",function(){
-				["iPad","iPhone","iPod"].indexOf(navigator.platform)>=0?(startBlyad(),console.log("ios. error. start full")):startBlyad("free")}
+			startBlyad()}
+			)}
+		)}
 	)}
-	)}
-	),window.open("https://dev-donut.ru/error")}
 	);
