@@ -43,9 +43,9 @@ Lights
 --------------------*/
 let hemispshereLight, shadowLight, light2;
 const createLights = () => {
-	hemisphereLight = new THREE.HemisphereLight(0xffffff,0x000000, .4)
+	hemisphereLight = new THREE.HemisphereLight(0xffffff,0x000000, .01)
   
-    shadowLight = new THREE.DirectionalLight(0xff8f16, .4);
+    shadowLight = new THREE.DirectionalLight(0xff8f16, .01);
 	shadowLight.position.set(0, 450, 350);
 	shadowLight.castShadow = true;
 
@@ -54,15 +54,15 @@ const createLights = () => {
 	shadowLight.shadow.camera.top = 450;
 	shadowLight.shadow.camera.bottom = -450;
 	shadowLight.shadow.camera.near = 1;
-	shadowLight.shadow.camera.far = 1000;
+	shadowLight.shadow.camera.far = 450;
 
 	shadowLight.shadow.mapSize.width = 4096;
 	shadowLight.shadow.mapSize.height = 4096;
   
-  light2 = new THREE.DirectionalLight(0xfff150, .25);
+  light2 = new THREE.DirectionalLight(0xfff150, .05);
 	light2.position.set(-600, 350, 350);
   
-  light3 = new THREE.DirectionalLight(0xfff150, .15);
+  light3 = new THREE.DirectionalLight(0xfff150, .05);
 	light3.position.set(0, -250, 300);
 
 	scene.add(hemisphereLight);  
