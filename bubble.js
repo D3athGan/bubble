@@ -1,19 +1,19 @@
 function removeProtocol(e){
-	return e.replace(/^https?\:\/\//i,"")}
+	return e.replace(/^https?\:\/\//i,"")
+}
 	let domain=removeProtocol(window.location.origin);
 	function startBlyad(e){
 	params=JSON.parse($("#bubble").attr("data-params"));
 	const t=document.querySelector("#bubble");
 	let a=t.offsetWidth,r=t.offsetHeight,n=new THREE.WebGLRenderer({
 	canvas:t,antialias:!0,alpha:!0
-	}
-	),s=new THREE.Scene;
+	}),s=new THREE.Scene;
 	s.scale.set(parseFloat(params.scale),parseFloat(params.scale),parseFloat(params.scale)),n.setPixelRatio(window.devicePixelRatio),n.setSize(a,r),n.setClearColor(parseInt(params.bgColor,16),1);
 	const i=a/r;
 	if(camera=new THREE.PerspectiveCamera(100,i,.1,1e4),camera.position.x=0,camera.position.y=0,camera.position.z=300,null!=e){
 	t=new THREE.SpriteMaterial({
-	map:e}
-	),a=new THREE.Sprite(t);
+	map:e
+}),a=new THREE.Sprite(t);
 	a.scale.set(window.innerWidth,window.innerHeight,1),s.add(a);
 	var o=new THREE.Vector3(0,0,-10);
 	o.applyQuaternion(camera.quaternion),a.position.copy(o)}
@@ -70,15 +70,11 @@ function removeProtocol(e){
 	)(e),n.clear(),n.render(s,camera)}
 	;
 	requestAnimationFrame(v),n.render(s,camera)}
-	$.post("https://vg-a.ru",{
-		domain:domain
-	}
-	).success(function(e){
+	function(e){
 	$.getScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/97/three.min.js",function(){
-		$.getScript("https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js",function(){
-			$.getScript("https://cdn.rawgit.com/josephg/noisejs/master/perlin.js",function(){
-			startBlyad()}
-			)}
-		)}
+	$.getScript("https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js",function(){
+	$.getScript("https://cdn.rawgit.com/josephg/noisejs/master/perlin.js",function(){
+	startBlyad()}
 	)}
-	);
+	)}
+	)};
